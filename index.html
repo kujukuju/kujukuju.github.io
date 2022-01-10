@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Moon Jam 2022</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css">
+
+        <script src="libs/nswa.js"></script>
+        <script src="libs/pixi.js"></script>
+        <script src="libs/twitchpackets.js"></script>
+        <script src="libs/pixelscan.js"></script>
+
+        <script src="src/Initialize.js"></script>
+
+        <script src="src/abilities/Grapple.js"></script>
+        <script src="src/abilities/SimpleGrapple.js"></script>
+        <script src="src/abilities/TeleporterRecall.js"></script>
+        <script src="src/abilities/ThrowingStar.js"></script>
+
+        <script src="src/entities/BirdEntity.js"></script>
+        <script src="src/entities/BossEntity.js"></script>
+        <script src="src/entities/MoonEntity.js"></script>
+        <script src="src/entities/StickySlimeEntity.js"></script>
+        <script src="src/entities/WormEntity.js"></script>
+
+        <script src="src/physics/BirdController.js"></script>
+        <script src="src/physics/BossController.js"></script>
+        <script src="src/physics/SlimeController.js"></script>
+        <script src="src/physics/WormController.js"></script>
+
+        <script src="src/AudioManager.js"></script>
+        <script src="src/Connection.js"></script>
+        <script src="src/DeadBodyManager.js"></script>
+        <script src="src/EntityInformation.js"></script>
+        <script src="src/Environment.js"></script>
+        <script src="src/FloatingSoul.js"></script>
+        <script src="src/GameState.js"></script>
+        <script src="src/Hearts.js"></script>
+        <script src="src/InterfaceManager.js"></script>
+        <script src="src/IntroLoreManager.js"></script>
+        <script src="src/Logic.js"></script>
+        <script src="src/Loop.js"></script>
+        <script src="src/MoonPackets.js"></script>
+        <script src="src/MovementHistory.js"></script>
+        <script src="src/OneLinerManager.js"></script>
+        <script src="src/PacketProcessor.js"></script>
+        <script src="src/Packets.js"></script>
+        <script src="src/Physics.js"></script>
+        <script src="src/Renderer.js"></script>
+        <script src="src/S.js"></script>
+        <script src="src/SoulPlantManager.js"></script>
+        <script src="src/Utilities.js"></script>
+        <script src="src/WhiteFilter.js"></script>
+    </head>
+    <body>
+        <div id="canvas-container"></div>
+        <div class="loreScreen" id="lore-screen-background" style="z-index: 10;"></div>
+        <div class="loreScreen" id="lore-screen-1">
+            <div class="loreBlock text1">
+                This is the legend that chronicles the last surviving Baldling.
+            </div>
+            <div class="loreBlock text2">
+                Some may wonder what caused this horrible chain of events.
+            </div>
+            <div class="loreBlock text3">
+                To answer that, we must look at the Baldling's more successful counterpart, the Changeling.
+            </div>
+            <div class="button loreNext" id="next1">
+                NEXT
+            </div>
+        </div>
+        <div class="loreScreen" id="lore-screen-2">
+            <div class="loreBlock text4">
+                Baldlings and Changelings alike survive on the souls of those they trick.
+            </div>
+            <div class="loreBlock text5">
+                But as the name implies, the Baldlings have a terrible curse.
+            </div>
+            <div class="loreBlock text6">
+                They are bald.
+            </div>
+            <div class="button lorePrevious" id="previous2">
+                PREVIOUS
+            </div>
+            <div class="button loreNext" id="next2">
+                NEXT
+            </div>
+        </div>
+        <div class="loreScreen" id="lore-screen-3">
+            <div class="loreBlock text7">
+                Their distinct lack of hair makes their attempts at deception futile.
+            </div>
+            <div class="loreBlock text8">
+                But there is still hope...
+            </div>
+            <div class="button lorePrevious" id="previous3">
+                PREVIOUS
+            </div>
+            <div class="button loreNext" id="next3">
+                NEXT
+            </div>
+        </div>
+        <div class="loreScreen" id="lore-screen-4">
+            <div class="loreBlock text9">
+                There was an old tale of a young Baldling who once acquired hair... An inspiration legend passed down through the generations.
+            </div>
+            <div class="loreBlock text10">
+                Through the offering of souls acquired while transformed as FOUR different creatures, the Baldling was granted hair by their creator.
+            </div>
+            <div class="loreBlock text11">
+                This is that legend...
+            </div>
+            <div class="button lorePrevious" id="previous4">
+                PREVIOUS
+            </div>
+            <div class="button loreNext" id="next4">
+                NEXT
+            </div>
+        </div>
+        <div class="screen" id="screen">
+            <div class="title">
+                <img src="assets/title.png" draggable="false" />
+            </div>
+            <div class="playButton" style="display:none;" id="play-button">
+                Play
+            </div>
+            <div class="scratch">
+                Made entirely from scratch
+            </div>
+            <div class="instructions">
+                <div class="header">Guidance with your <p>baldling</p> body:</div>
+                <div>Move: WASD</div>
+                <div>Jump: W / Space</div>
+                <div>Throw wooden stake: Left click</div>
+                <div>Graple: Right Click</div>
+                <div>Place teleporter recall: E</div>
+                <div>Teleporter recall: E</div>
+                <div class="header">Guidance with your <p>non-baldling</p> bodies:</div>
+                <div>WASD & Left click. Figure it out. :)</div>
+                <div class="references">
+                    <div>
+                        Font: Alagard by Hewett Tsoi
+                    </div>
+                    <div>
+                        Music: Dragon Slayer by Makai Symphony
+                    </div>
+                    <div>
+                        Music: Endless Storm by Makai Symphony
+                    </div>
+                    <div>
+                        Music: Executioner by Makai Symphony
+                    </div>
+                    <div>
+                        Music: The Introvert by Michael Kobrin
+                    </div>
+                    <div>
+                        Additional music and sound effects from https://zapsplat.com/
+                    </div>
+                </div>
+            </div>
+            <div class="bad" id="bad" style="display:none;">
+                <input type="checkbox" id="bad-checkbox">
+                <div class="label">I'M A WASHED UP GAMER CHECKBOX</div>
+            </div>
+        </div>
+        <div class="screen" id="wait-screen" style="display:none;">
+            <div class="pleaseWait">
+                Please wait to be selected...
+            </div>
+        </div>
+        <div class="pauseScreenBadCheckbox bad" id="paused-screen-bad" style="display:none;">
+            <input type="checkbox" id="paused-bad-checkbox">
+            <div class="label">I'M A WASHED UP GAMER CHECKBOX</div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,276 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    font-family: "Alagard", serif;
+
+    user-select: none;
+}
+
+#canvas-container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.loreScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    color: #ffffff;
+
+    font-size: 48px;
+
+    background-color: #000000;
+
+    padding-top: 200px;
+
+    opacity: 1;
+    transition: 500ms opacity ease;
+}
+
+.loreScreen.hidden {
+    opacity: 0;
+
+    z-index: 20;
+}
+
+.loreScreen.visible {
+    z-index: 30;
+}
+
+.loreScreen .loreBlock {
+    text-align: center;
+
+    transition: 2000ms opacity ease;
+    opacity: 0;
+
+    width: 60%;
+
+    margin: 0 auto;
+
+    letter-spacing: 1px;
+}
+
+.loreScreen.visible .loreBlock {
+    opacity: 1;
+}
+
+.loreScreen .loreBlock + .loreBlock {
+    margin-top: 90px;
+}
+
+.loreScreen .button {
+    color: #ffffff;
+    transition: 100ms color ease;
+
+    cursor: pointer;
+}
+
+.loreScreen .button:hover {
+    color: #888888;
+}
+
+.loreScreen .lorePrevious {
+    position: fixed;
+    left: 200px;
+    bottom: 100px;
+}
+
+.loreScreen .loreNext {
+    position: fixed;
+    right: 200px;
+    bottom: 100px;
+}
+
+.loreScreen .loreBlock.text1 {
+    transition-delay: 0ms;
+}
+
+.loreScreen .loreBlock.text2 {
+    transition-delay: 2200ms;
+}
+
+.loreScreen .loreBlock.text3 {
+    transition-delay: 4500ms;
+}
+
+.loreScreen .loreBlock.text4 {
+    transition-delay: 0ms;
+}
+
+.loreScreen .loreBlock.text5 {
+    transition-delay: 2500ms;
+}
+
+.loreScreen .loreBlock.text6 {
+    transition-delay: 5000ms;
+}
+
+.loreScreen .loreBlock.text7 {
+    transition-delay: 0ms;
+}
+
+.loreScreen .loreBlock.text8 {
+    transition-delay: 2000ms;
+}
+
+.loreScreen .loreBlock.text9 {
+    transition-delay: 0ms;
+}
+
+.loreScreen .loreBlock.text10 {
+    transition-delay: 3000ms;
+}
+
+.loreScreen .loreBlock.text11 {
+    transition-delay: 6000ms;
+}
+
+.screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    color: #ffffff;
+
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.screen .instructions {
+    position: absolute;
+    top: 450px;
+    left: 200px;
+
+    font-size: 24px;
+}
+
+.screen .instructions .header {
+    font-size: 32px;
+}
+
+.screen .instructions div + .header {
+    margin-top: 40px;
+}
+
+.screen .instructions .header p {
+    display: inline;
+
+    font-size: 40px;
+}
+
+.screen .instructions .references {
+    margin-top: 94px;
+
+    color: #ffffff;
+}
+
+.screen .instructions div + div {
+    margin-top: 8px;
+}
+
+.screen .instructions .references div + div {
+    margin-top: -1px;
+}
+
+.title {
+    width: 100%;
+    text-align: center;
+
+    margin-top: 200px;
+
+    font-size: 48px;
+
+    color: #ffffff;
+}
+
+.title img {
+    margin: 0 auto;
+}
+
+.playButton {
+    color: #ffffff;
+
+    font-size: 72px;
+
+    position: absolute;
+    top: 450px;
+    right: 200px;
+
+    cursor: pointer;
+
+    transition: 100ms color ease;
+}
+
+.playButton:hover {
+    color: #888888;
+}
+
+.scratch {
+    color: #ffffff;
+
+    font-size: 24px;
+
+    position: absolute;
+    top: 550px;
+    right: 200px;
+}
+
+.pleaseWait {
+    width: 100%;
+
+    font-size: 48px;
+
+    position: absolute;
+    top: 600px;
+
+    text-align: center;
+}
+
+.bad {
+    position: fixed;
+    bottom: 65px;
+    right: 200px;
+}
+
+.bad .label {
+    display: inline;
+
+    font-size: 18px;
+    line-height: 18px;
+}
+
+.bad input {
+    position: relative;
+    top: 4px;
+
+    margin-right: 8px;
+
+    display: inline;
+
+    line-height: 32px;
+
+    width: 18px;
+    height: 18px;
+
+    margin: 0;
+}
+
+.pauseScreenBadCheckbox {
+    z-index: 1000;
+
+    color: #ffffff;
+}
+
+@font-face {
+    font-family: Alagard;
+    src: url(assets/alagard.ttf) format('truetype');
+}
