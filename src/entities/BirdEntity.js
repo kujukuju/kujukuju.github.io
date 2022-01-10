@@ -298,6 +298,11 @@ class BirdEntity {
         offsetAABB.x += this.sprite.position.x;
         offsetAABB.y += this.sprite.position.y;
 
+        offsetAABB.x -= 4;
+        offsetAABB.width += 8;
+        offsetAABB.y -= 8;
+        offsetAABB.height += 8;
+
         if (offsetAABB.intersects(aabb)) {
             this.invulnTicks = 20;
             

@@ -3,6 +3,8 @@ class SoulPlantManager {
     static GIRL_FRAME_TEXTURE = PIXI.Texture.from('assets/girl-frame.png');
     static SLIME_FRAME_TEXTURE = PIXI.Texture.from('assets/slime-frame.png');
     static WORM_FRAME_TEXTURE = PIXI.Texture.from('assets/worm-frame.png');
+    static BIRD_FRAME_TEXTURE = PIXI.Texture.from('assets/bird-frame.png');
+    static BOSS_FRAME_TEXTURE = PIXI.Texture.from('assets/boss-frame.png');
     static COLLECT_TEXTURE = PIXI.Texture.from('assets/collect-souls.png');
 
     static LIGHT_EXPLOSION_TEXTURE = PIXI.Texture.from('assets/light-explosion.png');
@@ -67,6 +69,11 @@ class SoulPlantManager {
     static bossCollectionText = new PIXI.Text('0 / 0', {fontFamily: 'Alagard', fontSize: 32, align: 'center', fill: 0xffffff});
     static bossHoldingText = new PIXI.Text('Holding 0', {fontFamily: 'Alagard', fontSize: 16, align: 'center', fill: 0xffffff});
 
+    static timeInFrontOfPlant = 0;
+    static showingExplanationText = 0;
+
+    static explanationText = new PIXI.Text('You must turn in souls as the creature that acquired them.', {fontFamily: 'Alagard', fontSize: 32, align: 'center', fill: 0xffffff})
+
     static initialize() {
         for (let i = 0; i < SoulPlantManager.POSITIONS.length; i++) {
             const position = SoulPlantManager.POSITIONS[i];
@@ -83,6 +90,13 @@ class SoulPlantManager {
 
             SoulPlantManager.sprites.push(sprite);
         }
+
+        SoulPlantManager.explanationText.visible = false;
+        SoulPlantManager.explanationText.anchor.x = 0.5;
+        SoulPlantManager.explanationText.anchor.y = 1;
+        SoulPlantManager.explanationText.position.x = window.innerWidth / 2;
+        SoulPlantManager.explanationText.position.y = window.innerHeight * (2 / 3);
+        Renderer.fixed.addChild(SoulPlantManager.explanationText);
 
         SoulPlantManager.soulSuckSound = SoulPlantManager.SOUL_SUCK_SOUND.create();
         SoulPlantManager.soulSuckSound.setVolume(0);
@@ -158,7 +172,7 @@ class SoulPlantManager {
         SoulPlantManager.wormHoldingText.position.y = SoulPlantManager.wormFrameSprite.position.y + 40;
         SoulPlantManager.collectionContainer.addChild(SoulPlantManager.wormHoldingText);
 
-        SoulPlantManager.birdFrameSprite = new PIXI.Sprite(SoulPlantManager.WORM_FRAME_TEXTURE);
+        SoulPlantManager.birdFrameSprite = new PIXI.Sprite(SoulPlantManager.BIRD_FRAME_TEXTURE);
         SoulPlantManager.birdFrameSprite.scale.x = 2;
         SoulPlantManager.birdFrameSprite.scale.y = 2;
         SoulPlantManager.birdFrameSprite.position.x = 20;
@@ -171,7 +185,7 @@ class SoulPlantManager {
         SoulPlantManager.birdHoldingText.position.y = SoulPlantManager.birdFrameSprite.position.y + 40;
         SoulPlantManager.collectionContainer.addChild(SoulPlantManager.birdHoldingText);
 
-        SoulPlantManager.bossFrameSprite = new PIXI.Sprite(SoulPlantManager.WORM_FRAME_TEXTURE);
+        SoulPlantManager.bossFrameSprite = new PIXI.Sprite(SoulPlantManager.BOSS_FRAME_TEXTURE);
         SoulPlantManager.bossFrameSprite.scale.x = 2;
         SoulPlantManager.bossFrameSprite.scale.y = 2;
         SoulPlantManager.bossFrameSprite.position.x = 20;
@@ -307,6 +321,7 @@ class SoulPlantManager {
                                     if (SoulPlantManager.holdingCountMoon > 0) {
                                         SoulPlantManager.holdingCountMoon--;
                                         SoulPlantManager.soulCountMoon++;
+                                        SoulPlantManager.timeInFrontOfPlant = -60;
 
                                         SoulPlantManager.lightExplosionSprite.visible = true;
                                         SoulPlantManager.lightExplosionSprite.position.x = position.x;
@@ -320,6 +335,7 @@ class SoulPlantManager {
                                     if (SoulPlantManager.holdingCountSlime > 0) {
                                         SoulPlantManager.holdingCountSlime--;
                                         SoulPlantManager.soulCountSlime++;
+                                        SoulPlantManager.timeInFrontOfPlant = -60;
 
                                         SoulPlantManager.lightExplosionSprite.visible = true;
                                         SoulPlantManager.lightExplosionSprite.position.x = position.x;
@@ -333,6 +349,7 @@ class SoulPlantManager {
                                     if (SoulPlantManager.holdingCountWorm > 0) {
                                         SoulPlantManager.holdingCountWorm--;
                                         SoulPlantManager.soulCountWorm++;
+                                        SoulPlantManager.timeInFrontOfPlant = -60;
 
                                         SoulPlantManager.lightExplosionSprite.visible = true;
                                         SoulPlantManager.lightExplosionSprite.position.x = position.x;
@@ -346,6 +363,7 @@ class SoulPlantManager {
                                     if (SoulPlantManager.holdingCountBird > 0) {
                                         SoulPlantManager.holdingCountBird--;
                                         SoulPlantManager.soulCountBird++;
+                                        SoulPlantManager.timeInFrontOfPlant = -60;
 
                                         SoulPlantManager.lightExplosionSprite.visible = true;
                                         SoulPlantManager.lightExplosionSprite.position.x = position.x;
@@ -359,6 +377,7 @@ class SoulPlantManager {
                                     if (SoulPlantManager.holdingCountBoss > 0) {
                                         SoulPlantManager.holdingCountBoss--;
                                         SoulPlantManager.soulCountBoss++;
+                                        SoulPlantManager.timeInFrontOfPlant = -60;
 
                                         SoulPlantManager.lightExplosionSprite.visible = true;
                                         SoulPlantManager.lightExplosionSprite.position.x = position.x;
@@ -388,6 +407,7 @@ class SoulPlantManager {
         }
 
         if (!playingSoulSuck) {
+            SoulPlantManager.timeInFrontOfPlant = Math.min(SoulPlantManager.timeInFrontOfPlant, 0);
             if (SoulPlantManager.soulSuckSound.getVolume() > 0) {
                 SoulPlantManager.soulSuckSound.setVolume(Math.max(SoulPlantManager.soulSuckSound.getVolume() - 0.05, 0));
             } else {
@@ -395,6 +415,28 @@ class SoulPlantManager {
                     SoulPlantManager.soulSuckSound.stop();
                 }
             }
+        } else {
+            SoulPlantManager.timeInFrontOfPlant++;
+        }
+
+        if (SoulPlantManager.timeInFrontOfPlant > 120) {
+            let hasSouls = false;
+            hasSouls = hasSouls || SoulPlantManager.holdingCountMoon > 0;
+            hasSouls = hasSouls || SoulPlantManager.holdingCountSlime > 0;
+            hasSouls = hasSouls || SoulPlantManager.holdingCountWorm > 0;
+            hasSouls = hasSouls || SoulPlantManager.holdingCountBird > 0;
+            hasSouls = hasSouls || SoulPlantManager.holdingCountBoss > 0;
+            if (hasSouls) {
+                SoulPlantManager.showingExplanationText = 180;
+            }
+        }
+
+        if (SoulPlantManager.showingExplanationText > 0) {
+            SoulPlantManager.showingExplanationText--;
+
+            SoulPlantManager.explanationText.visible = true;
+        } else {
+            SoulPlantManager.explanationText.visible = false;
         }
         
         if (GameState.roundStarted() && !GameState.paused) {

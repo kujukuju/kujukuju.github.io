@@ -94,8 +94,8 @@ class BossController {
 
         // this.position.x = Math.max(Math.min(this.position.x, Physics.TEXTURE.width - 320), 320);
         // this.position.y = Math.max(Math.min(this.position.y, Physics.TEXTURE.height - 180), 180);
-        this.position.x = Math.max(Math.min(this.position.x, Physics.TEXTURE.width - 480), 480);
-        this.position.y = Math.max(Math.min(this.position.y, Physics.TEXTURE.height - 270), 270);
+        this.position.x = Math.max(Math.min(this.position.x, Physics.TEXTURE.width - 640), 640);
+        this.position.y = Math.max(Math.min(this.position.y, Physics.TEXTURE.height - 360), 360);
     }
 
     applyForce(force) {

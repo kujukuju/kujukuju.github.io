@@ -22,100 +22,100 @@ class GameState {
 
     static ROUNDS = [
         null,
-        {
-            entities: {
-                slime: 0,
-                worm: 0,
-                bird: 0,
-                boss: 1,
-            },
-            required: {
-                moon: 1,
-                slime: 0,
-                worm: 0,
-                bird: 0,
-                boss: 0,
-            },
-        },
         // {
         //     entities: {
-        //         slime: 8,
-        //         worm: 6,
-        //         bird: 0,
+        //         slime: 0,
+        //         worm: 1,
+        //         bird: 1,
         //         boss: 0,
         //     },
         //     required: {
-        //         moon: 12,
-        //         slime: 4,
-        //         worm: 4,
-        //         bird: 0,
+        //         moon: 3,
+        //         slime: 0,
+        //         worm: 1,
+        //         bird: 1,
         //         boss: 0,
         //     },
         // },
-
-        null,
         {
             entities: {
-                slime: 0,
-                worm: 0,
+                slime: 8,
+                worm: 6,
                 bird: 0,
-                boss: 1,
+                boss: 0,
             },
             required: {
-                moon: 2,
-                slime: 0,
-                worm: 0,
+                moon: 14,
+                slime: 4,
+                worm: 4,
                 bird: 0,
                 boss: 0,
             },
         },
-        // {
-        //     entities: {
-        //         slime: 10,
-        //         worm: 8,
-        //         bird: 6,
-        //         boss: 0,
-        //     },
-        //     required: {
-        //         moon: 15,
-        //         slime: 2,
-        //         worm: 2,
-        //         bird: 6,
-        //         boss: 0,
-        //     },
-        // },
 
         null,
-        {
-            entities: {
-                slime: 0,
-                worm: 0,
-                bird: 0,
-                boss: 1,
-            },
-            required: {
-                moon: 3,
-                slime: 0,
-                worm: 0,
-                bird: 0,
-                boss: 0,
-            },
-        },
         // {
         //     entities: {
-        //         slime: 12,
-        //         worm: 10,
-        //         bird: 8,
-        //         boss: 2,
+        //         slime: 0,
+        //         worm: 0,
+        //         bird: 1,
+        //         boss: 0,
         //     },
         //     required: {
-        //         moon: 24,
-        //         slime: 2,
-        //         worm: 2,
+        //         moon: 2,
+        //         slime: 0,
+        //         worm: 0,
         //         bird: 2,
-        //         boss: 10,
+        //         boss: 0,
         //     },
         // },
+        {
+            entities: {
+                slime: 10,
+                worm: 8,
+                bird: 6,
+                boss: 0,
+            },
+            required: {
+                moon: 16,
+                slime: 2,
+                worm: 2,
+                bird: 6,
+                boss: 0,
+            },
+        },
+
+        null,
+        // {
+        //     entities: {
+        //         slime: 0,
+        //         worm: 0,
+        //         bird: 0,
+        //         boss: 1,
+        //     },
+        //     required: {
+        //         moon: 3,
+        //         slime: 0,
+        //         worm: 0,
+        //         bird: 0,
+        //         boss: 0,
+        //     },
+        // },
+        {
+            entities: {
+                slime: 12,
+                worm: 10,
+                bird: 8,
+                boss: 1,
+            },
+            required: {
+                moon: 24,
+                slime: 2,
+                worm: 2,
+                bird: 2,
+                boss: 10,
+            },
+        },
     ];
 
     static firstSpawn = true;

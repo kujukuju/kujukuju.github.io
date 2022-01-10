@@ -5,7 +5,7 @@ class SlimeController {
     falling = false;
     normals = [];
     accel = 2;
-    friction = 0.25;
+    friction = 0.5;
     // the fricton that is applied on top of default friction once you've exceeded max speed
     terminalFriction = 0.15;
     speed = 4;
@@ -21,7 +21,7 @@ class SlimeController {
 
     chargeFrames = 0;
     maxChargeFrames = 60;
-
+s
     maxJumpStrength = 12;
     minJumpStrength = 6;
 
@@ -100,7 +100,7 @@ class SlimeController {
                     this.velocity.add(accelVec.negate());
                 }
 
-                this.velocity.add(Vec2.copy(this.averagedNormal).negate().mul(0.8));
+                this.velocity.add(Vec2.copy(this.averagedNormal).negate().mul(1));
             }
         }
         

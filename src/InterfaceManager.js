@@ -11,9 +11,6 @@ class InterfaceManager {
         InterfaceManager.website.position.x = window.innerWidth / 2;
         InterfaceManager.website.position.y = 20;
 
-        // TODO TODO TODO TODO
-        InterfaceManager.website.visible = false;
-
         Renderer.fixed.addChild(InterfaceManager.website);
 
         InterfaceManager.hearts = new Hearts();
