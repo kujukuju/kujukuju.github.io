@@ -26,8 +26,8 @@ class GameState {
             entities: {
                 slime: 0,
                 worm: 0,
-                bird: 1,
-                boss: 0,
+                bird: 0,
+                boss: 1,
             },
             required: {
                 moon: 1,
@@ -58,7 +58,7 @@ class GameState {
             entities: {
                 slime: 0,
                 worm: 0,
-                bird: 1,
+                bird: 0,
                 boss: 1,
             },
             required: {
@@ -161,7 +161,7 @@ class GameState {
             GameState.menuOpen = false;
 
             if (window.location.protocol.startsWith('file') && TwitchPackets._username === 'kujukuju') {
-                GameState.DesiredEntityType = MoonEntity;
+                GameState.DesiredEntityType = StickySlimeEntity;
             } else {
                 document.getElementById('wait-screen').style.display = 'block';
             }
@@ -400,6 +400,10 @@ class GameState {
                 GameState.pausedText.text = 'Some players disconnected...\n\nFinding more players.';
                 GameState.paused = true;
             } else {
+                if (GameState.pausedText.text === 'Some players disconnected...\n\nFinding more players.') {
+                    GameState.paused = false;
+                }
+
                 GameState.pausedText.text = 'FORCIBLY PAUSED FOR EVERYONE LOL';
             }
 

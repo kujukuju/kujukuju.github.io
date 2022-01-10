@@ -4,6 +4,9 @@ class ThrowingStar {
     static COOLDOWN = 30;
     static DESPAWN_TICKS = 400;
 
+    static AUDIO = new NSWA.Source('assets/throwing-star.mp3', {volume: 0.45});
+    static HIT_WALL_AUDIO = new NSWA.Source('assets/hit-wall.mp3', {volume: 0.5});
+
     sprite;
     direction;
     stuck;
@@ -11,6 +14,9 @@ class ThrowingStar {
     moon;
     speed;
     hit;
+
+    audio;
+    hitWallAudio;
 
     constructor(position, direction) {
         this.moon = window.location.protocol.startsWith('file') && TwitchPackets._username === 'kujukuju';
@@ -38,6 +44,11 @@ class ThrowingStar {
         }
 
         Renderer.midground.addChild(this.sprite);
+
+        this.audio = ThrowingStar.AUDIO.create();
+        this.audio.setPannerOrientation(0, 0, -1);
+        this.audio.setPannerPosition(position.x * AudioManager.SCALE, position.y * AudioManager.SCALE, 0);
+        this.audio.play();
     }
 
     update() {
@@ -63,6 +74,11 @@ class ThrowingStar {
         for (let x = -4; x <= 4; x++) {
             if (Physics.world.getPixel(positionX + x, positionY)) {
                 this.stuck = true;
+
+                this.hitWallAudio = ThrowingStar.HIT_WALL_AUDIO.create();
+                this.hitWallAudio.setPannerOrientation(0, 0, -1);
+                this.hitWallAudio.setPannerPosition(positionX * AudioManager.SCALE, positionY * AudioManager.SCALE, 0);
+                AudioManager.autoAdjustVolume(this.hitWallAudio);
 
                 const pixel = Physics.world.scanLineEmpty(new Vec2(positionX, positionY), new Vec2(previousPositionX, previousPositionY));
                 if (pixel) {
@@ -95,5 +111,9 @@ class ThrowingStar {
 
     destroy() {
         this.sprite.destroy();
+        this.audio.destroy();
+        if (this.hitWallAudio) {
+            this.hitWallAudio.destroy();
+        }
     }
 }

@@ -112,7 +112,7 @@ class AudioManager {
         }
     }
 
-    static autoAdjustVolume(instance, isSelf) {
+    static autoAdjustVolume(instance, isSelf, forceRange) {
         if (GameState.round === 6) {
             instance.setVolume(0);
             instance.stop();
@@ -127,7 +127,8 @@ class AudioManager {
 
         // well just try linear for now I guess
         const d = Math.sqrt(dx * dx + dy * dy);
-        const volume = 1 - Math.min(d / 650, 1);
+        const range = forceRange || 650;
+        const volume = 1 - Math.min(d / range, 1);
 
         if (volume === 0 && instance.isPlaying()) {
             instance.__lastTime = instance.getCurrentTime();

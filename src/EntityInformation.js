@@ -20,16 +20,18 @@ class EntityInformation {
 
     static cullEntities() {
         const now = Date.now();
-        for (const name in EntityInformation.entities) {
+        for (const name in EntityInformation.lastActiveTimes) {
             if (EntityInformation.clientEntityName === name) {
                 continue;
             }
             if (name === 'kujukuju') {
                 continue;
             }
-            
-            if (now - EntityInformation.lastActiveTimes[name] > 8000) {
-                EntityInformation.entities[name].destroy();
+
+            if (now - EntityInformation.lastActiveTimes[name] > 12000) {
+                if (EntityInformation.entities[name]) {
+                    EntityInformation.entities[name].destroy();
+                }
                 delete EntityInformation.lastActiveTimes[name];
                 delete EntityInformation.tempDead[name];
                 delete GameState.approvedEntities[name];

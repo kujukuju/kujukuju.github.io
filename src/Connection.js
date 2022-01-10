@@ -17,6 +17,7 @@ class Connection {
             }
 
             document.getElementById('play-button').style.display = 'inline-block';
+            document.getElementById('loading-text').style.display = 'none';
         });
 
         TwitchPackets.addListener(TwitchPackets.EVENT_MESSAGE, message => {

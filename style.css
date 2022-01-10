@@ -168,7 +168,7 @@ html, body {
 }
 
 .screen .instructions .references {
-    margin-top: 94px;
+    margin-top: 68px;
 
     color: #ffffff;
 }
@@ -212,6 +212,16 @@ html, body {
 
 .playButton:hover {
     color: #888888;
+}
+
+.loadingText {
+    color: #ffffff;
+
+    font-size: 48px;
+
+    position: absolute;
+    top: 450px;
+    right: 200px;
 }
 
 .scratch {

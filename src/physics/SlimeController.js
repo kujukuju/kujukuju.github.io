@@ -5,7 +5,7 @@ class SlimeController {
     falling = false;
     normals = [];
     accel = 2;
-    friction = 0.75;
+    friction = 0.25;
     // the fricton that is applied on top of default friction once you've exceeded max speed
     terminalFriction = 0.15;
     speed = 4;
@@ -30,6 +30,7 @@ class SlimeController {
     _currentFallingFrames = 0;
 
     previousNormals = [];
+    previousPreviousNormals = [];
 
     averagedNormal = new Vec2();
 
@@ -40,7 +41,7 @@ class SlimeController {
     }
 
     applyAcceleration(up, left, down, right, mousePosition, mouseDown, attached) {
-        const wall = this.normals.length > 0 || this.previousNormals.length > 0 || attached;
+        const wall = this.normals.length > 0 || this.previousNormals.length > 0 || this.previousPreviousNormals.length > 0 || attached;
 
         let friction = wall ? this.friction : this.friction / 20;
 
@@ -58,11 +59,11 @@ class SlimeController {
             accelVec.x += this.accel;
         }
 
-        if (this.normals.length + this.previousNormals.length === 0) {
+        if (this.normals.length + this.previousNormals.length + this.previousPreviousNormals.length === 0) {
             accelVec.y = 0;
         }
 
-        let existingAccelSpeed = Vec2.copy(this.velocity).projectOnto(accelVec).length() * 1;
+        let existingAccelSpeed = Vec2.copy(this.velocity).projectOnto(accelVec).length() * 0.9;
         if (this.velocity.dot(accelVec) <= 0) {
             existingAccelSpeed = 0;
         }
@@ -72,7 +73,7 @@ class SlimeController {
 
         this.averagedNormal.x = 0;
         this.averagedNormal.y = 0;
-        if (this.normals.length + this.previousNormals.length > 0) {
+        if (this.normals.length + this.previousNormals.length + this.previousPreviousNormals.length > 0) {
             for (let i = 0; i < this.normals.length; i++) {
                 this.averagedNormal.add(this.normals[i]);
             }
@@ -81,21 +82,25 @@ class SlimeController {
                 this.averagedNormal.add(this.previousNormals[i]);
             }
             
-            this.averagedNormal.x /= (this.normals.length + this.previousNormals.length);
-            this.averagedNormal.y /= (this.normals.length + this.previousNormals.length);
+            for (let i = 0; i < this.previousPreviousNormals.length; i++) {
+                this.averagedNormal.add(this.previousPreviousNormals[i]);
+            }
+            
+            this.averagedNormal.x /= (this.normals.length + this.previousNormals.length + this.previousPreviousNormals.length);
+            this.averagedNormal.y /= (this.normals.length + this.previousNormals.length + this.previousPreviousNormals.length);
         }
 
         if (appliedAccel.magnitudeSquared() > 0) {
             this.velocity.add(appliedAccel);
 
-            if (this.normals.length + this.previousNormals.length > 0) {
+            if (this.normals.length + this.previousNormals.length + this.previousPreviousNormals.length > 0) {
                 // this means youre applying accel while youre on a wall, so we need to cancel out that accel against your normal
                 accelVec.projectOnto(this.averagedNormal);
                 if (accelVec.dot(this.averagedNormal) > 0) {
                     this.velocity.add(accelVec.negate());
                 }
 
-                this.velocity.add(Vec2.copy(this.averagedNormal).negate().mul(1));
+                this.velocity.add(Vec2.copy(this.averagedNormal).negate().mul(0.8));
             }
         }
         
@@ -140,6 +145,11 @@ class SlimeController {
             const gravitySpeed = Physics.world.gravity.length();
             const appliedGravity = Vec2.copy(Physics.world.gravity).normalize().multiply(Math.max(gravitySpeed - bodyFallingSpeed * bodyFallingSpeed, 0));
             this.velocity.add(appliedGravity);
+        }
+
+        this.previousPreviousNormals.length = 0;
+        for (let i = 0; i < this.previousNormals.length; i++) {
+            this.previousPreviousNormals.push(Vec2.copy(this.previousNormals[i]));
         }
 
         this.previousNormals.length = 0;

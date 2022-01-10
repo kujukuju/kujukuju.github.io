@@ -93,6 +93,7 @@ class StickySlimeEntity {
 
     update() {
         this.invulnTicks = Math.max(this.invulnTicks - 1, 0);
+        this.accurateHistory.storageLength = null;
 
         if (Math.round(this.invulnTicks / 10) % 2 === 1) {
             this.sprite.filters = [WHITE_FILTER];

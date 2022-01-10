@@ -1,5 +1,10 @@
 class MoonEntity {
     static TEXTURE = PIXI.Texture.from('assets/baldling.png');
+    static FOOTSTEP1_AUDIO = new NSWA.Source('assets/footstep1.mp3', {loop: false, volume: 0.3});
+    static FOOTSTEP2_AUDIO = new NSWA.Source('assets/footstep2.mp3', {loop: false, volume: 0.3});
+    static FOOTSTEP3_AUDIO = new NSWA.Source('assets/footstep3.mp3', {loop: false, volume: 0.3});
+    static footsteps;
+    static indices;
 
     // these go down or up because your health in each form is persistent
     static maxHearts = 3;
@@ -29,12 +34,30 @@ class MoonEntity {
     calculatedVelocityX;
     invulnTicks;
 
+    wasJumping = false;
+
     constructor(username) {
         if (username === 'kujukuju') {
             username = 'bald';
         }
 
-        this.sprite = new FramedSprite(MoonEntity.TEXTURE, 32, 38, 10, 39);
+        if (!MoonEntity.footsteps) {
+            MoonEntity.footsteps = [
+                [MoonEntity.FOOTSTEP1_AUDIO.create(), MoonEntity.FOOTSTEP1_AUDIO.create()],
+                // [MoonEntity.FOOTSTEP2_AUDIO.create(), MoonEntity.FOOTSTEP2_AUDIO.create()],
+                [MoonEntity.FOOTSTEP3_AUDIO.create(), MoonEntity.FOOTSTEP3_AUDIO.create()],
+            ];
+            MoonEntity.indices = [0, 0, 0];
+
+            // MoonEntity.footsteps[0][0].setPannerOrientation(0, 0, -1);
+            // MoonEntity.footsteps[0][1].setPannerOrientation(0, 0, -1);
+            // MoonEntity.footsteps[1][0].setPannerOrientation(0, 0, -1);
+            // MoonEntity.footsteps[1][1].setPannerOrientation(0, 0, -1);
+            // MoonEntity.footsteps[2][0].setPannerOrientation(0, 0, -1);
+            // MoonEntity.footsteps[2][1].setPannerOrientation(0, 0, -1);
+        }
+
+        this.sprite = new FramedSprite(MoonEntity.TEXTURE, 26, 35, 10, 43);
         this.sprite.anchor.x = 0.5;
         this.sprite.anchor.y = 1;
 
@@ -42,6 +65,7 @@ class MoonEntity {
         this.sprite.addAnimation('run', 1, 24);
         this.sprite.addAnimation('jump', 25, 8);
         this.sprite.addAnimation('fall', 33, 6);
+        this.sprite.addAnimation('attack', 39, 4);
 
         this.controller = new GroundController();
         this.controller.accel *= 0.75;
@@ -92,6 +116,7 @@ class MoonEntity {
 
     update() {
         this.invulnTicks = Math.max(this.invulnTicks - 1, 0);
+        this.accurateHistory.storageLength = null;
 
         if (Math.round(this.invulnTicks / 10) % 2 === 1) {
             this.sprite.filters = [WHITE_FILTER];
@@ -107,14 +132,32 @@ class MoonEntity {
 
             potentiallyUnstuck(this.controller.position, this.aabb);
 
-            if (this.controller.jumping) {
+            const throwingStarFrames = ThrowingStar.COOLDOWN - this.throwingStarCooldown;
+
+            let jumping = false;
+            if (throwingStarFrames < 18) {
+                this.sprite.stepAnimation('attack', 0.2, false);
+            } else if (this.controller.jumping) {
                 this.sprite.stepAnimation('jump', 0.4, false);
+                this.wasJumping = true;
+                jumping = true;
             } else if (this.controller.falling) {
                 this.sprite.stepAnimation('fall', 0.4, false);
+                this.wasJumping = true;
+                jumping = true;
             } else if (Math.abs(this.controller.velocity.x) > 0.1) {
                 this.sprite.stepAnimation('run', Math.abs(this.controller.velocity.x) * 0.15);
+                const frame = Math.floor(this.sprite.getRealFrame());
+                if (frame === 6 || frame === 18) {
+                    MoonEntity.playFootstep();
+                }
             } else {
                 this.sprite.stepAnimation('idle', 0.4);
+            }
+
+            if (!jumping && this.wasJumping) {
+                this.wasJumping = false;
+                MoonEntity.playFootstep();
             }
 
             if (this.controller.velocity.x < -0.1) {
@@ -298,7 +341,7 @@ class MoonEntity {
 
             AudioManager.playHitNoise(this.sprite.position.x, this.sprite.position.y);
         }
-        
+
         this.remainingHearts = health;
         if (this.remainingHearts <= 0) {
             this.remainingHearts = 0;
@@ -370,5 +413,17 @@ class MoonEntity {
         this.abilities.length = 0;
 
         EntityInformation.silentRemoveEntity(this);
+    }
+
+    static playFootstep() {
+        const index = Math.floor(Math.random() * MoonEntity.footsteps.length);
+        const audio = MoonEntity.footsteps[index][MoonEntity.indices[index]];
+        MoonEntity.indices[index] = (MoonEntity.indices[index] + 1) % MoonEntity.footsteps[index].length;
+
+        // audio.setPannerPosition(x * AudioManager.SCALE, y * AudioManager.SCALE, 0);
+        // audio.__lastTime = 0;
+        audio.play();
+        audio.seek(0);
+        // AudioManager.autoAdjustVolume(audio);
     }
 }

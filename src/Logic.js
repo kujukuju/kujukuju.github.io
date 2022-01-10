@@ -15,6 +15,10 @@ class Logic {
             } else {
                 Camera.setScale(new Vec2(3, 3));
             }
+
+            if (Camera.scale.x === 3) {
+                Camera.scaleSpeedStrength = 0.05;
+            }
         }
 
         Camera.update();

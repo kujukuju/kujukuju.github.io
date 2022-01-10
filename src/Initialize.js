@@ -1,4 +1,9 @@
 window.addEventListener('load', () => {
+    // this is to weed out bad browsers I guess
+    // I noticed the audio library does this so im scared
+    var a = null;
+    var b = a ?? 0;
+
     if (window.location.protocol.startsWith('https')) {
         TwitchAuthenticate.autoAuthenticatePleb(C, S);
     } else {

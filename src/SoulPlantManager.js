@@ -320,7 +320,6 @@ class SoulPlantManager {
                                     if (SoulPlantManager.holdingCountSlime > 0) {
                                         SoulPlantManager.holdingCountSlime--;
                                         SoulPlantManager.soulCountSlime++;
-                                        SoulPlantManager.soulCountMoon++;
 
                                         SoulPlantManager.lightExplosionSprite.visible = true;
                                         SoulPlantManager.lightExplosionSprite.position.x = position.x;
@@ -334,7 +333,6 @@ class SoulPlantManager {
                                     if (SoulPlantManager.holdingCountWorm > 0) {
                                         SoulPlantManager.holdingCountWorm--;
                                         SoulPlantManager.soulCountWorm++;
-                                        SoulPlantManager.soulCountMoon++;
 
                                         SoulPlantManager.lightExplosionSprite.visible = true;
                                         SoulPlantManager.lightExplosionSprite.position.x = position.x;
@@ -348,7 +346,6 @@ class SoulPlantManager {
                                     if (SoulPlantManager.holdingCountBird > 0) {
                                         SoulPlantManager.holdingCountBird--;
                                         SoulPlantManager.soulCountBird++;
-                                        SoulPlantManager.soulCountMoon++;
 
                                         SoulPlantManager.lightExplosionSprite.visible = true;
                                         SoulPlantManager.lightExplosionSprite.position.x = position.x;
@@ -362,7 +359,6 @@ class SoulPlantManager {
                                     if (SoulPlantManager.holdingCountBoss > 0) {
                                         SoulPlantManager.holdingCountBoss--;
                                         SoulPlantManager.soulCountBoss++;
-                                        SoulPlantManager.soulCountMoon++;
 
                                         SoulPlantManager.lightExplosionSprite.visible = true;
                                         SoulPlantManager.lightExplosionSprite.position.x = position.x;

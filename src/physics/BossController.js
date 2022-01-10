@@ -49,7 +49,7 @@ class BossController {
         this.dashing = false;
         if (mouseDown && this.availableDashCharge > 0) {
             this.availableDashCharge = Math.max(this.availableDashCharge - 1, 0);
-            friction *= 0.2;
+            friction *= 0.4;
             accelVec.mul(2);
             this.dashing = true;
         }

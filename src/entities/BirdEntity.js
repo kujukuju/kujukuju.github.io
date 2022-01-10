@@ -1,5 +1,7 @@
 class BirdEntity {
     static TEXTURE = PIXI.Texture.from('assets/bird.png');
+    static HELICOPTER_AUDIO = new NSWA.Source('assets/helicopter.mp3', {loop: true, volume: 0.6});
+    static DROP_AUDIO = new NSWA.Source('assets/bird-drop.mp3', {loop: false, volume: 0.8});
 
     static maxHearts = 4;
     static remainingHearts = 4;
@@ -22,6 +24,11 @@ class BirdEntity {
     flyingFrames;
 
     sendSlamming;
+
+    helicopterAudio;
+    dropAudio;
+
+    isRecovering = false;
 
     constructor(username) {
         if (username === 'kujukuju') {
@@ -70,10 +77,17 @@ class BirdEntity {
         this.networkedSlamming = false;
 
         this.sendSlamming = false;
+
+        this.helicopterAudio = BirdEntity.HELICOPTER_AUDIO.create();
+        this.helicopterAudio.setPannerOrientation(0, 0, -1);
+
+        this.dropAudio = BirdEntity.DROP_AUDIO.create();
+        this.dropAudio.setPannerOrientation(0, 0, -1);
     }
 
     update() {
         this.invulnTicks = Math.max(this.invulnTicks - 1, 0);
+        this.accurateHistory.storageLength = null;
 
         if (Math.round(this.invulnTicks / 10) % 2 === 1) {
             this.sprite.filters = [WHITE_FILTER];
@@ -127,6 +141,9 @@ class BirdEntity {
             }
 
             fakeVelocityX = this.controller.velocity.x;
+
+            this.helicopterAudio.setPannerPosition(this.controller.position.x * AudioManager.SCALE, this.controller.position.y * AudioManager.SCALE, 0);
+            this.dropAudio.setPannerPosition(this.controller.position.x * AudioManager.SCALE, this.controller.position.y * AudioManager.SCALE, 0);
         } else {
             const position = this.history.get(Date.now() - 500);
 
@@ -153,22 +170,41 @@ class BirdEntity {
                     }
                 }
             }
+
+            this.helicopterAudio.setPannerPosition(this.sprite.position.x * AudioManager.SCALE, this.sprite.position.y * AudioManager.SCALE, 0);
+            this.dropAudio.setPannerPosition(this.sprite.position.x * AudioManager.SCALE, this.sprite.position.y * AudioManager.SCALE, 0);
         }
 
         this.name.position.x = this.sprite.position.x;
         this.name.position.y = this.sprite.position.y - 28;
 
+        let playingHelicopter = false;
         if (slamming) {
             this.sprite.stepAnimation('falling', 0.2, true);
             this.slammingRecovery = 20;
             this.flyingFrames = 0;
+
+            this.isRecovering = false;
         } else if (this.slammingRecovery > 0) {
             const progress = 1 - (this.slammingRecovery / 20);
             this.sprite.gotoAnimation('recovery', progress * 7);
 
+            if (!this.isRecovering) {
+                this.dropAudio.__lastTime = 0;
+                AudioManager.autoAdjustVolume(this.dropAudio, EntityInformation.getClientEntity() === this);
+                this.dropAudio.seek(0);
+            }
+
+            this.isRecovering = true;
+
             this.slammingRecovery--;
             this.flyingFrames = 0;
         } else {
+            AudioManager.autoAdjustVolume(this.helicopterAudio, EntityInformation.getClientEntity() === this);
+            playingHelicopter = true;
+
+            this.isRecovering = false;
+
             if (onGround) {
                 this.sprite.stepAnimation('flyingstart', 0.1, true);
 
@@ -181,6 +217,10 @@ class BirdEntity {
             } else {
                 this.sprite.stepAnimation('flying', 0.2, true);
             }
+        }
+
+        if (!playingHelicopter && this.helicopterAudio.isPlaying()) {
+            this.helicopterAudio.stop();
         }
 
         if (fakeVelocityX < -0.1) {
@@ -348,6 +388,8 @@ class BirdEntity {
         this.sprite.destroy();
         this.name.destroy();
         this.hearts.destroy();
+        this.helicopterAudio.destroy();
+        this.dropAudio.destroy();
 
         EntityInformation.silentRemoveEntity(this);
     }

@@ -34,7 +34,7 @@ class OneLinerManager {
 
                     switch (currentEntityType) {
                         case 'MoonEntity': {
-                            OneLinerManager.text.text = 'You\'re alive.\n\Collect your souls and offer them to the soul plants.';
+                            OneLinerManager.text.text = 'You\'re alive.\n\nCollect your souls and offer them to the soul plants.';
                         } break;
 
                         case 'StickySlimeEntity': {

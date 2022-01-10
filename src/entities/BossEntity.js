@@ -50,7 +50,7 @@ class BossEntity {
 
         Renderer.midground.addChild(this.sprite);
 
-        this.name = new PIXI.Text(username, {fontFamily: 'Alagard', fontSize: 80, align: 'center', fill: 0xffffff});
+        this.name = new PIXI.Text(username, {fontFamily: 'Alagard', fontSize: 160, align: 'center', fill: 0xffffff});
         this.name.anchor.x = 0.5;
         this.name.anchor.y = 1;
         this.name.scale.x = 0.1;
@@ -71,6 +71,7 @@ class BossEntity {
 
     update() {
         this.invulnTicks = Math.max(this.invulnTicks - 1, 0);
+        this.accurateHistory.storageLength = BossEntity.TEXTURE.width;
 
         if (Math.round(this.invulnTicks / 10) % 2 === 1) {
             this.sprite.filters = [WHITE_FILTER];

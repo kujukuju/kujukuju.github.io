@@ -1,6 +1,6 @@
 class WormEntity {
     static TEXTURE = PIXI.Texture.from('assets/wormthing.png');
-    static AUDIO = new NSWA.Source('assets/small-worm.mp3', {loop: true, volume: 0.4});
+    static AUDIO = new NSWA.Source('assets/small-worm.mp3', {loop: true, volume: 0.3});
 
     static maxHearts = 6;
     static remainingHearts = 6;
@@ -71,6 +71,7 @@ class WormEntity {
 
     update() {
         this.invulnTicks = Math.max(this.invulnTicks - 1, 0);
+        this.accurateHistory.storageLength = WormEntity.TEXTURE.width;
 
         if (Math.round(this.invulnTicks / 10) % 2 === 1) {
             this.sprite.filters = [WHITE_FILTER];
@@ -284,7 +285,7 @@ class WormEntity {
             const position = this.getPosition();
             AudioManager.playHitNoise(position.x, position.y);
         }
-        
+
         this.remainingHearts = health;
         if (this.remainingHearts <= 0) {
             this.remainingHearts = 0;
