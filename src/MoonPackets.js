@@ -129,6 +129,8 @@ class MoonPackets {
             const bytes = [];
             let index = 0;
             index = Packets.writeValidatePacket(TwitchPackets._username, bytes, index);
+            index = Packets.writeRoundPacket(GameState.round, bytes, index);
+            index = Packets.writePausedPacket(GameState.paused, bytes, index);
             index = Packets.writeJoinApprovedPacket(MoonPackets.forcedApprovalList, bytes, index);
 
             TwitchPackets.sendBytes(bytes);
@@ -155,6 +157,8 @@ class MoonPackets {
             const bytes = [];
             let index = 0;
             index = Packets.writeValidatePacket(TwitchPackets._username, bytes, index);
+            index = Packets.writeRoundPacket(GameState.round, bytes, index);
+            index = Packets.writePausedPacket(GameState.paused, bytes, index);
             index = Packets.writeJoinApprovedPacket(MoonPackets.forcedApprovalList, bytes, index);
 
             TwitchPackets.sendBytes(bytes);
@@ -170,6 +174,8 @@ class MoonPackets {
             const bytes = [];
             let index = 0;
             index = Packets.writeValidatePacket(TwitchPackets._username, bytes, index);
+            index = Packets.writeRoundPacket(GameState.round, bytes, index);
+            index = Packets.writePausedPacket(GameState.paused, bytes, index);
             index = Packets.writeRequestMorePacket(bytes, index);
 
             TwitchPackets.sendBytes(bytes);

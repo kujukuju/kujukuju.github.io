@@ -85,6 +85,7 @@ class BirdEntity {
 
         let slamming = false;
         let onGround = false;
+        let fakeVelocityX = 0;
 
         if (EntityInformation.getClientEntity() === this) {
             this.controller.applyAcceleration(Input.keys[Input.KEY_W] || Input.keys[Input.KEY_SPACE], Input.keys[Input.KEY_A], Input.keys[Input.KEY_S], Input.keys[Input.KEY_D], Input.mouseDownLeft);
@@ -124,9 +125,12 @@ class BirdEntity {
                     }
                 }
             }
+
+            fakeVelocityX = this.controller.velocity.x;
         } else {
             const position = this.history.get(Date.now() - 500);
 
+            fakeVelocityX = position.x - this.sprite.position.x;
             const fakeVelocityY = position.y - this.sprite.position.y;
             this.sprite.position.x = position.x;
             this.sprite.position.y = position.y;
@@ -177,6 +181,12 @@ class BirdEntity {
             } else {
                 this.sprite.stepAnimation('flying', 0.2, true);
             }
+        }
+
+        if (fakeVelocityX < -0.1) {
+            this.sprite.scale.x = -Math.abs(this.sprite.scale.x);
+        } else if (fakeVelocityX > 0.1) {
+            this.sprite.scale.x = Math.abs(this.sprite.scale.x);
         }
 
         // const velocity = Vec2.copy(this.sprite.position).subtract(previousPosition);
@@ -282,7 +292,7 @@ class BirdEntity {
 
             AudioManager.playHitNoise(this.sprite.position.x, this.sprite.position.y);
         }
-        
+
         this.remainingHearts = health;
         if (this.remainingHearts <= 0) {
             this.remainingHearts = 0;
